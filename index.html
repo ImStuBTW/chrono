@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Howdy World</title>
+    <script src="./public/js/react/react.min.js"></script>
+    <script src="./public/js/react-dom/react-dom.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <link rel="stylesheet" href="./public/css/style.css">
+</head>
+<body>
+    <div id="main" class="container">
+        <h1>Cron Job Builder</h1>
+        <div id="cron-builder"></div>
+    </div>
+    <script type="text/babel">
+        class CronField extends React.Component {
+            render() {
+                return (
+                    <div className="input-group">
+                        <span className="input-group-addon" idName="basic-addon1">{this.props.label}</span>
+                        <input type="text" className="form-control" placeholder={this.props.placeholder} />
+                    </div>
+                );
+            }
+        }
+
+        class CronBuilder extends React.Component {
+            render() {
+                return(
+                    <div>
+                        <h2>The Current Cron Task Is:</h2>
+                        <h3>Runs Every 3 Days.</h3>
+                        <CronField label="Second" placeholder="0-59"/>
+                        <CronField label="Minute" placeholder="0-23"/>
+                        <CronField label="Hour" placeholder="1-31"/>
+                        <CronField label="Day of Month" placeholder="1-31"/>
+                        <CronField label="Month" placeholder="1-12"/>
+                        <CronField label="Day of Week" placeholder="0-6"/>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(
+             <CronBuilder />,
+             document.getElementById('cron-builder')
+        );
+    </script>
+    <script src="./public/js/jquery/jquery.min.js"></script>
+    <script src="./public/js/bootstrap/bootstrap.min.js"></script>
+</body>
+</html>
