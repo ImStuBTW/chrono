@@ -4222,9 +4222,9 @@ a.label:hover, a.label:focus {
   .label-primary[href]:hover, .label-primary[href]:focus {
     background-color: #286090; }
 
-.label-success {
+.label-success, .label-valid {
   background-color: #5cb85c; }
-  .label-success[href]:hover, .label-success[href]:focus {
+  .label-success[href]:hover, [href].label-valid:hover, .label-success[href]:focus, [href].label-valid:focus {
     background-color: #449d44; }
 
 .label-info {
@@ -4232,14 +4232,14 @@ a.label:hover, a.label:focus {
   .label-info[href]:hover, .label-info[href]:focus {
     background-color: #31b0d5; }
 
-.label-warning {
+.label-warning, .label-invalid {
   background-color: #f0ad4e; }
-  .label-warning[href]:hover, .label-warning[href]:focus {
+  .label-warning[href]:hover, [href].label-invalid:hover, .label-warning[href]:focus, [href].label-invalid:focus {
     background-color: #ec971f; }
 
-.label-danger {
+.label-danger, .label-missing {
   background-color: #d9534f; }
-  .label-danger[href]:hover, .label-danger[href]:focus {
+  .label-danger[href]:hover, [href].label-missing:hover, .label-danger[href]:focus, [href].label-missing:focus {
     background-color: #c9302c; }
 
 .badge {
@@ -5827,11 +5827,10 @@ body {
   background-color: #ddd;
   padding: 10px; }
 
-.valid {
-  background-color: green; }
+#cron-field {
+  text-align: center;
+  font-size: 48px;
+  height: 64px; }
 
-.invalid {
-  background-color: red; }
-
-.active {
-  background-color: blue; }
+.cron-tabs {
+  margin-top: 15px; }

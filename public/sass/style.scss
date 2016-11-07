@@ -19,13 +19,24 @@ body {
     padding: 10px;
 }
 
-.valid {
-    background-color: green;
-}
-.invalid {
-    background-color: red;
+#cron-field {
+    text-align: center;
+    font-size: 48px;
+    height: 64px;
 }
 
-.active {
-    background-color: blue;
+.cron-tabs {
+    margin-top: 15px;
+}
+
+.label-valid {
+    @extend .label-success;
+}
+
+.label-invalid {
+    @extend .label-warning;
+}
+
+.label-missing {
+    @extend .label-danger;
 }
