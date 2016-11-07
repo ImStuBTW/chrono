@@ -17,7 +17,8 @@ class CronField extends React.Component {
     }
     render() {
         return (
-            <input type="text"
+            <input id={this.props.name}
+                   type="text"
                    className="form-control"
                    value={this.props.value}
                    placeholder={this.props.placeholder}
@@ -27,15 +28,83 @@ class CronField extends React.Component {
     }
 }
 
+class CronTabs extends React.Component {
+    constructor(props) {
+        super(props);
+        this.updateTab = this.updateTab.bind(this);
+    }
+    updateTab(event) {
+        console.log(event.target.parentElement.id);
+        this.props.onClick(event.target.parentElement.id);
+    }
+    render() {
+        let range = '0-60';
+        let alt = '';
+        let minuteClass = '';
+        let hourClass = '';
+        let dayClass = '';
+        let monthClass = '';
+        let weekdayClass = '';
+        if(this.props.activeTab === 'minute') { range = '0-60'; minuteClass = 'active';}
+        else if(this.props.activeTab === 'hour') { range = '0-23'; hourClass = 'active';}
+        else if(this.props.activeTab === 'day') { range = '1-31'; dayClass = 'active';}
+        else if(this.props.activeTab === 'month') { range = '1-12'; monthClass = 'active'; alt = 'JAN-DEC';}
+        else if(this.props.activeTab === 'weekday') { range = '0-6'; weekdayClass = 'active'; alt = 'MON-SUN';}
+        return (
+            <div>
+                <ul className="nav nav-pills nav-justified">
+                    <li role="presentation" id="minute" className={minuteClass}><a className={this.props.minuteClass} onClick={this.updateTab}>Minute</a></li>
+                    <li role="presentation" id="hour" className={hourClass}><a className={this.props.hourClass} onClick={this.updateTab}>Hour</a></li>
+                    <li role="presentation" id="day" className={dayClass}><a className={this.props.dayClass} onClick={this.updateTab}>Day</a></li>
+                    <li role="presentation" id="month" className={monthClass}><a className={this.props.monthClass} onClick={this.updateTab}>Month</a></li>
+                    <li role="presentation" id="weekday" className={weekdayClass}><a className={this.props.weekdayClass} onClick={this.updateTab}>Day of Week</a></li>
+                </ul>
+                <CronSyntax range={range} alt={alt}/>
+            </div>
+        );
+    }
+}
+
+class CronSyntax extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        let range = '';
+        let alt = '';
+        if(this.props.range) {
+            range = <li className="list-group-item">{this.props.range} - Acceptable Values</li>;
+        }
+        if(this.props.alt) {
+            alt = <li className="list-group-item">{this.props.alt} - Alternative Values</li>;
+        }
+        return (
+            <div className="Syntax">
+                <ul className="list-group">
+                    <li className="list-group-item">* - The asterisk operator specifies all possible values for a field.</li>
+                    <li className="list-group-item">, - This comma operator specifies a list of values. Ex: 1,3,6</li>
+                    <li className="list-group-item">- - The dash operator specifies a range of values. Ex: "1-5"</li>
+                    <li className="list-group-item">/ - The slash operator specifies a range of step values. Ex: "0/2"</li>
+                    {range}
+                    {alt}
+                </ul>
+            </div>
+        );
+    }
+}
+
 class CronBuilder extends React.Component {
     constructor(props) {
         super(props);
         this.handleCronFieldSelect = this.handleCronFieldSelect.bind(this);
         this.handleCronFieldChange = this.handleCronFieldChange.bind(this);
+        this.handleTabChange = this.handleTabChange.bind(this);
         this.state = {
+            fieldId: 'cron-field',
             caret: '',
             cron: '',
             valid: '',
+            activeTab: 'minute',
             second: '',
             minute: '',
             hour: '',
@@ -62,10 +131,14 @@ class CronBuilder extends React.Component {
     handleCronFieldSelect(pos) {
         this.setState({caret: pos});
     }
+    handleTabChange(value){
+        document.getElementById(this.state.fieldId).focus();
+        document.getElementById(this.state.fieldId).setSelectionRange(eval('this.state.' + value + 'Range[0]'), eval('this.state.' + value + 'Range[1]'));
+        this.setState({activeTab: value, caret: eval('this.state.' + value + 'Range[0]')});
+    }
     handleCronFieldChange(value) {
         let result = value.replace(/^\s+/g, "").toUpperCase();
         let split = result.split(' ');
-        console.log(split);
         let split0 = (split[0] && (split[0].length));
         let split1 = (split[1] && (split[0].length+split[1].length)+1);
         let split2 = (split[2] && (split[0].length+split[1].length+split[2].length)+2);
@@ -151,6 +224,8 @@ class CronBuilder extends React.Component {
         }
     }
     render() {
+        let pretty = '';
+        let prettyNext = '';
         let minuteClass = 'invalid';
         let hourClass = 'invalid';
         let dayClass = 'invalid';
@@ -161,26 +236,31 @@ class CronBuilder extends React.Component {
         let dayReg = new RegExp(this.state.dayRegex);
         let monthReg = new RegExp(this.state.monthRegex);
         let weekdayReg = new RegExp(this.state.weekdayRegex);
-        if(minuteReg.test(this.state.minute)) {minuteClass='valid'} else {minuteClass='invalid'}
-        if(hourReg.test(this.state.hour)) {hourClass='valid'} else {hourClass='invalid'}
-        if(dayReg.test(this.state.day)) {dayClass='valid'} else {dayClass='invalid'}
-        if(monthReg.test(this.state.month)) {monthClass='valid'} else {monthClass='invalid'}
-        if(weekdayReg.test(this.state.weekday)) {weekdayClass='valid'} else {weekdayClass='invalid'}
-        if(this.state.minuteRange[0] <= this.state.caret && this.state.caret <= this.state.minuteRange[1]) {minuteClass='active'}
-        if(this.state.hourRange[0] <= this.state.caret && this.state.caret <= this.state.hourRange[1]) {hourClass='active'}
-        if(this.state.dayRange[0] <= this.state.caret && this.state.caret <= this.state.dayRange[1]) {dayClass='active'}
-        if(this.state.monthRange[0] <= this.state.caret && this.state.caret <= this.state.monthRange[1]) {monthClass='active'}
-        if(this.state.weekdayRange[0] <= this.state.caret && this.state.caret <= this.state.weekdayRange[1]) {weekdayClass='active'}
+        if(minuteReg.test(this.state.minute)) {minuteClass='valid'}
+        if(hourReg.test(this.state.hour)) {hourClass='valid'}
+        if(dayReg.test(this.state.day)) {dayClass='valid'}
+        if(monthReg.test(this.state.month)) {monthClass='valid'}
+        if(weekdayReg.test(this.state.weekday)) {weekdayClass='valid'}
+        if(this.state.minuteRange[0] <= this.state.caret && this.state.caret <= this.state.minuteRange[1]) {this.state.activeTab='minute';}
+        if(this.state.hourRange[0] <= this.state.caret && this.state.caret <= this.state.hourRange[1]) {this.state.activeTab='hour';}
+        if(this.state.dayRange[0] <= this.state.caret && this.state.caret <= this.state.dayRange[1]) {this.state.activeTab='day';}
+        if(this.state.monthRange[0] <= this.state.caret && this.state.caret <= this.state.monthRange[1]) {this.state.activeTab='month';}
+        if(this.state.weekdayRange[0] <= this.state.caret && this.state.caret <= this.state.weekdayRange[1]) {this.state.activeTab='weekday';}
+        if(minuteClass === 'valid' && hourClass  === 'valid' && dayClass  === 'valid' && monthClass  === 'valid' && weekdayClass === 'valid') {
+            pretty = prettyCron.toString(this.state.cron);
+            prettyNext = prettyCron.getNext(this.state.cron);
+        }
+        else {
+            pretty = 'Invalid Cron';
+            prettyNext = 'undetermined'
+        }
         return(
             <div>
                 <h2>The Current Cron Field Is: {this.state.cron}</h2>
-                <h3>Caret Position: {this.state.caret}</h3>
-                <h3 className={minuteClass}>minute: {this.state.minute}, length: {this.state.minute && this.state.minute.length}</h3>
-                    <h3 className={hourClass}>hour: {this.state.hour}, length: {this.state.hour && this.state.hour.length}</h3>
-                <h3 className={dayClass}>day: {this.state.day}, length: {this.state.day && this.state.day.length}</h3>
-                <h3 className={monthClass}>month: {this.state.month}, length: {this.state.month && this.state.month.length}</h3>
-                <h3 className={weekdayClass}>weekday: {this.state.weekday}, length: {this.state.weekday && this.state.weekday.length}</h3>
-                <CronField value={this.state.cron} placeholder="Cron Job" onSelect={this.handleCronFieldSelect} onChange={this.handleCronFieldChange} />
+                <h3>{pretty}</h3>
+                <h3>The next time this job will run is {prettyNext}.</h3>
+                <CronField name={this.state.fieldId} value={this.state.cron} placeholder="Cron Job" selection={this.state.caret} onSelect={this.handleCronFieldSelect} onChange={this.handleCronFieldChange} />
+                <CronTabs activeTab={this.state.activeTab} minuteClass={minuteClass} hourClass={hourClass} dayClass={dayClass} monthClass={monthClass} weekdayClass={weekdayClass} onClick={this.handleTabChange} />
             </div>
         );
     }

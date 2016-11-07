@@ -5827,11 +5827,11 @@ body {
   background-color: #ddd;
   padding: 10px; }
 
-h3.valid {
-  color: green; }
+.valid {
+  background-color: green; }
 
-h3.invalid {
-  color: red; }
+.invalid {
+  background-color: red; }
 
-h3.active {
-  color: blue; }
+.active {
+  background-color: blue; }

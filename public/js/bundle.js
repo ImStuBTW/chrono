@@ -47,7 +47,8 @@ var CronField = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
-            return _react2.default.createElement('input', { type: 'text',
+            return _react2.default.createElement('input', { id: this.props.name,
+                type: 'text',
                 className: 'form-control',
                 value: this.props.value,
                 placeholder: this.props.placeholder,
@@ -59,20 +60,188 @@ var CronField = function (_React$Component) {
     return CronField;
 }(_react2.default.Component);
 
-var CronBuilder = function (_React$Component2) {
-    _inherits(CronBuilder, _React$Component2);
+var CronTabs = function (_React$Component2) {
+    _inherits(CronTabs, _React$Component2);
+
+    function CronTabs(props) {
+        _classCallCheck(this, CronTabs);
+
+        var _this2 = _possibleConstructorReturn(this, (CronTabs.__proto__ || Object.getPrototypeOf(CronTabs)).call(this, props));
+
+        _this2.updateTab = _this2.updateTab.bind(_this2);
+        return _this2;
+    }
+
+    _createClass(CronTabs, [{
+        key: 'updateTab',
+        value: function updateTab(event) {
+            console.log(event.target.parentElement.id);
+            this.props.onClick(event.target.parentElement.id);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var range = '0-60';
+            var alt = '';
+            var minuteClass = '';
+            var hourClass = '';
+            var dayClass = '';
+            var monthClass = '';
+            var weekdayClass = '';
+            if (this.props.activeTab === 'minute') {
+                range = '0-60';minuteClass = 'active';
+            } else if (this.props.activeTab === 'hour') {
+                range = '0-23';hourClass = 'active';
+            } else if (this.props.activeTab === 'day') {
+                range = '1-31';dayClass = 'active';
+            } else if (this.props.activeTab === 'month') {
+                range = '1-12';monthClass = 'active';alt = 'JAN-DEC';
+            } else if (this.props.activeTab === 'weekday') {
+                range = '0-6';weekdayClass = 'active';alt = 'MON-SUN';
+            }
+            return _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'ul',
+                    { className: 'nav nav-pills nav-justified' },
+                    _react2.default.createElement(
+                        'li',
+                        { role: 'presentation', id: 'minute', className: minuteClass },
+                        _react2.default.createElement(
+                            'a',
+                            { className: this.props.minuteClass, onClick: this.updateTab },
+                            'Minute'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { role: 'presentation', id: 'hour', className: hourClass },
+                        _react2.default.createElement(
+                            'a',
+                            { className: this.props.hourClass, onClick: this.updateTab },
+                            'Hour'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { role: 'presentation', id: 'day', className: dayClass },
+                        _react2.default.createElement(
+                            'a',
+                            { className: this.props.dayClass, onClick: this.updateTab },
+                            'Day'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { role: 'presentation', id: 'month', className: monthClass },
+                        _react2.default.createElement(
+                            'a',
+                            { className: this.props.monthClass, onClick: this.updateTab },
+                            'Month'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { role: 'presentation', id: 'weekday', className: weekdayClass },
+                        _react2.default.createElement(
+                            'a',
+                            { className: this.props.weekdayClass, onClick: this.updateTab },
+                            'Day of Week'
+                        )
+                    )
+                ),
+                _react2.default.createElement(CronSyntax, { range: range, alt: alt })
+            );
+        }
+    }]);
+
+    return CronTabs;
+}(_react2.default.Component);
+
+var CronSyntax = function (_React$Component3) {
+    _inherits(CronSyntax, _React$Component3);
+
+    function CronSyntax(props) {
+        _classCallCheck(this, CronSyntax);
+
+        return _possibleConstructorReturn(this, (CronSyntax.__proto__ || Object.getPrototypeOf(CronSyntax)).call(this, props));
+    }
+
+    _createClass(CronSyntax, [{
+        key: 'render',
+        value: function render() {
+            var range = '';
+            var alt = '';
+            if (this.props.range) {
+                range = _react2.default.createElement(
+                    'li',
+                    { className: 'list-group-item' },
+                    this.props.range,
+                    ' - Acceptable Values'
+                );
+            }
+            if (this.props.alt) {
+                alt = _react2.default.createElement(
+                    'li',
+                    { className: 'list-group-item' },
+                    this.props.alt,
+                    ' - Alternative Values'
+                );
+            }
+            return _react2.default.createElement(
+                'div',
+                { className: 'Syntax' },
+                _react2.default.createElement(
+                    'ul',
+                    { className: 'list-group' },
+                    _react2.default.createElement(
+                        'li',
+                        { className: 'list-group-item' },
+                        '* - The asterisk operator specifies all possible values for a field.'
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { className: 'list-group-item' },
+                        ', - This comma operator specifies a list of values. Ex: 1,3,6'
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { className: 'list-group-item' },
+                        '- - The dash operator specifies a range of values. Ex: "1-5"'
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { className: 'list-group-item' },
+                        '/ - The slash operator specifies a range of step values. Ex: "0/2"'
+                    ),
+                    range,
+                    alt
+                )
+            );
+        }
+    }]);
+
+    return CronSyntax;
+}(_react2.default.Component);
+
+var CronBuilder = function (_React$Component4) {
+    _inherits(CronBuilder, _React$Component4);
 
     function CronBuilder(props) {
         _classCallCheck(this, CronBuilder);
 
-        var _this2 = _possibleConstructorReturn(this, (CronBuilder.__proto__ || Object.getPrototypeOf(CronBuilder)).call(this, props));
+        var _this4 = _possibleConstructorReturn(this, (CronBuilder.__proto__ || Object.getPrototypeOf(CronBuilder)).call(this, props));
 
-        _this2.handleCronFieldSelect = _this2.handleCronFieldSelect.bind(_this2);
-        _this2.handleCronFieldChange = _this2.handleCronFieldChange.bind(_this2);
-        _this2.state = {
+        _this4.handleCronFieldSelect = _this4.handleCronFieldSelect.bind(_this4);
+        _this4.handleCronFieldChange = _this4.handleCronFieldChange.bind(_this4);
+        _this4.handleTabChange = _this4.handleTabChange.bind(_this4);
+        _this4.state = {
+            fieldId: 'cron-field',
             caret: '',
             cron: '',
             valid: '',
+            activeTab: 'minute',
             second: '',
             minute: '',
             hour: '',
@@ -95,7 +264,7 @@ var CronBuilder = function (_React$Component2) {
             weekdayRegex: '^(\\?|\\*|(?:[0-6])(?:(?:-|\\/|\\,|#)(?:[0-6]))?(?:L)?(?:,(?:[0-6])(?:(?:-|\\/|\\,|#)(?:[0-6]))?(?:L)?)*|\\?|\\*|(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?(?:,(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?)*)$',
             yearRegex: '^(\\?|\\*|(?:|\\d{4})(?:(?:-|\\/|\\,)(?:|\\d{4}))?(?:,(?:|\\d{4})(?:(?:-|\\/|\\,)(?:|\\d{4}))?)*)$'
         };
-        return _this2;
+        return _this4;
     }
 
     _createClass(CronBuilder, [{
@@ -104,11 +273,17 @@ var CronBuilder = function (_React$Component2) {
             this.setState({ caret: pos });
         }
     }, {
+        key: 'handleTabChange',
+        value: function handleTabChange(value) {
+            document.getElementById(this.state.fieldId).focus();
+            document.getElementById(this.state.fieldId).setSelectionRange(eval('this.state.' + value + 'Range[0]'), eval('this.state.' + value + 'Range[1]'));
+            this.setState({ activeTab: value, caret: eval('this.state.' + value + 'Range[0]') });
+        }
+    }, {
         key: 'handleCronFieldChange',
         value: function handleCronFieldChange(value) {
             var result = value.replace(/^\s+/g, "").toUpperCase();
             var split = result.split(' ');
-            console.log(split);
             var split0 = split[0] && split[0].length;
             var split1 = split[1] && split[0].length + split[1].length + 1;
             var split2 = split[2] && split[0].length + split[1].length + split[2].length + 2;
@@ -203,6 +378,8 @@ var CronBuilder = function (_React$Component2) {
     }, {
         key: 'render',
         value: function render() {
+            var pretty = '';
+            var prettyNext = '';
             var minuteClass = 'invalid';
             var hourClass = 'invalid';
             var dayClass = 'invalid';
@@ -215,43 +392,40 @@ var CronBuilder = function (_React$Component2) {
             var weekdayReg = new RegExp(this.state.weekdayRegex);
             if (minuteReg.test(this.state.minute)) {
                 minuteClass = 'valid';
-            } else {
-                minuteClass = 'invalid';
             }
             if (hourReg.test(this.state.hour)) {
                 hourClass = 'valid';
-            } else {
-                hourClass = 'invalid';
             }
             if (dayReg.test(this.state.day)) {
                 dayClass = 'valid';
-            } else {
-                dayClass = 'invalid';
             }
             if (monthReg.test(this.state.month)) {
                 monthClass = 'valid';
-            } else {
-                monthClass = 'invalid';
             }
             if (weekdayReg.test(this.state.weekday)) {
                 weekdayClass = 'valid';
-            } else {
-                weekdayClass = 'invalid';
             }
             if (this.state.minuteRange[0] <= this.state.caret && this.state.caret <= this.state.minuteRange[1]) {
-                minuteClass = 'active';
+                this.state.activeTab = 'minute';
             }
             if (this.state.hourRange[0] <= this.state.caret && this.state.caret <= this.state.hourRange[1]) {
-                hourClass = 'active';
+                this.state.activeTab = 'hour';
             }
             if (this.state.dayRange[0] <= this.state.caret && this.state.caret <= this.state.dayRange[1]) {
-                dayClass = 'active';
+                this.state.activeTab = 'day';
             }
             if (this.state.monthRange[0] <= this.state.caret && this.state.caret <= this.state.monthRange[1]) {
-                monthClass = 'active';
+                this.state.activeTab = 'month';
             }
             if (this.state.weekdayRange[0] <= this.state.caret && this.state.caret <= this.state.weekdayRange[1]) {
-                weekdayClass = 'active';
+                this.state.activeTab = 'weekday';
+            }
+            if (minuteClass === 'valid' && hourClass === 'valid' && dayClass === 'valid' && monthClass === 'valid' && weekdayClass === 'valid') {
+                pretty = prettyCron.toString(this.state.cron);
+                prettyNext = prettyCron.getNext(this.state.cron);
+            } else {
+                pretty = 'Invalid Cron';
+                prettyNext = 'undetermined';
             }
             return _react2.default.createElement(
                 'div',
@@ -265,50 +439,17 @@ var CronBuilder = function (_React$Component2) {
                 _react2.default.createElement(
                     'h3',
                     null,
-                    'Caret Position: ',
-                    this.state.caret
+                    pretty
                 ),
                 _react2.default.createElement(
                     'h3',
-                    { className: minuteClass },
-                    'minute: ',
-                    this.state.minute,
-                    ', length: ',
-                    this.state.minute && this.state.minute.length
+                    null,
+                    'The next time this job will run is ',
+                    prettyNext,
+                    '.'
                 ),
-                _react2.default.createElement(
-                    'h3',
-                    { className: hourClass },
-                    'hour: ',
-                    this.state.hour,
-                    ', length: ',
-                    this.state.hour && this.state.hour.length
-                ),
-                _react2.default.createElement(
-                    'h3',
-                    { className: dayClass },
-                    'day: ',
-                    this.state.day,
-                    ', length: ',
-                    this.state.day && this.state.day.length
-                ),
-                _react2.default.createElement(
-                    'h3',
-                    { className: monthClass },
-                    'month: ',
-                    this.state.month,
-                    ', length: ',
-                    this.state.month && this.state.month.length
-                ),
-                _react2.default.createElement(
-                    'h3',
-                    { className: weekdayClass },
-                    'weekday: ',
-                    this.state.weekday,
-                    ', length: ',
-                    this.state.weekday && this.state.weekday.length
-                ),
-                _react2.default.createElement(CronField, { value: this.state.cron, placeholder: 'Cron Job', onSelect: this.handleCronFieldSelect, onChange: this.handleCronFieldChange })
+                _react2.default.createElement(CronField, { name: this.state.fieldId, value: this.state.cron, placeholder: 'Cron Job', selection: this.state.caret, onSelect: this.handleCronFieldSelect, onChange: this.handleCronFieldChange }),
+                _react2.default.createElement(CronTabs, { activeTab: this.state.activeTab, minuteClass: minuteClass, hourClass: hourClass, dayClass: dayClass, monthClass: monthClass, weekdayClass: weekdayClass, onClick: this.handleTabChange })
             );
         }
     }]);
