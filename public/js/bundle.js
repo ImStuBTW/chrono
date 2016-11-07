@@ -29,11 +29,17 @@ var CronField = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (CronField.__proto__ || Object.getPrototypeOf(CronField)).call(this, props));
 
+        _this.handleSelect = _this.handleSelect.bind(_this);
         _this.handleChange = _this.handleChange.bind(_this);
         return _this;
     }
 
     _createClass(CronField, [{
+        key: 'handleSelect',
+        value: function handleSelect(event) {
+            this.props.onSelect(event.target.selectionStart);
+        }
+    }, {
         key: 'handleChange',
         value: function handleChange(event) {
             this.props.onChange(event.target.value);
@@ -41,219 +47,268 @@ var CronField = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
-            return _react2.default.createElement(
-                'div',
-                { className: 'input-group' },
-                _react2.default.createElement(
-                    'span',
-                    { className: 'input-group-addon' },
-                    this.props.label
-                ),
-                _react2.default.createElement('input', { type: 'text',
-                    className: 'form-control',
-                    value: this.props.value,
-                    placeholder: this.props.placeholder,
-                    onChange: this.handleChange })
-            );
+            return _react2.default.createElement('input', { type: 'text',
+                className: 'form-control',
+                value: this.props.value,
+                placeholder: this.props.placeholder,
+                onSelect: this.handleSelect,
+                onChange: this.handleChange });
         }
     }]);
 
     return CronField;
 }(_react2.default.Component);
 
-var CronTabs = function (_React$Component2) {
-    _inherits(CronTabs, _React$Component2);
-
-    function CronTabs(props) {
-        _classCallCheck(this, CronTabs);
-
-        var _this2 = _possibleConstructorReturn(this, (CronTabs.__proto__ || Object.getPrototypeOf(CronTabs)).call(this, props));
-
-        _this2.state = { activeTab: 'cron-minute' };
-        _this2.updateTab = _this2.updateTab.bind(_this2);
-        return _this2;
-    }
-
-    _createClass(CronTabs, [{
-        key: 'updateTab',
-        value: function updateTab(event) {
-            document.getElementById(this.state.activeTab).className = '';
-            document.getElementById(event.target.parentElement.id).className = "active";
-            this.setState({ activeTab: event.target.parentElement.id });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var range = '0-60';
-            if (this.state.activeTab === 'cron-minute') {
-                range = '0-60';
-            } else if (this.state.activeTab === 'cron-hour') {
-                range = '0-23';
-            } else if (this.state.activeTab === 'cron-day') {
-                range = '1-31';
-            } else if (this.state.activeTab === 'cron-month') {
-                range = '1-12';
-            } else if (this.state.activeTab === 'cron-weekday') {
-                range = '0-6';
-            }
-            return _react2.default.createElement(
-                'div',
-                null,
-                _react2.default.createElement(
-                    'ul',
-                    { className: 'nav nav-tabs' },
-                    _react2.default.createElement(
-                        'li',
-                        { role: 'presentation', id: 'cron-minute', className: 'active' },
-                        _react2.default.createElement(
-                            'a',
-                            { onClick: this.updateTab },
-                            'Minute'
-                        )
-                    ),
-                    _react2.default.createElement(
-                        'li',
-                        { role: 'presentation', id: 'cron-hour' },
-                        _react2.default.createElement(
-                            'a',
-                            { onClick: this.updateTab },
-                            'Hour'
-                        )
-                    ),
-                    _react2.default.createElement(
-                        'li',
-                        { role: 'presentation', id: 'cron-day' },
-                        _react2.default.createElement(
-                            'a',
-                            { onClick: this.updateTab },
-                            'Day'
-                        )
-                    ),
-                    _react2.default.createElement(
-                        'li',
-                        { role: 'presentation', id: 'cron-month' },
-                        _react2.default.createElement(
-                            'a',
-                            { onClick: this.updateTab },
-                            'Month'
-                        )
-                    ),
-                    _react2.default.createElement(
-                        'li',
-                        { role: 'presentation', id: 'cron-weekday' },
-                        _react2.default.createElement(
-                            'a',
-                            { onClick: this.updateTab },
-                            'Day of Week'
-                        )
-                    )
-                ),
-                _react2.default.createElement(CronSyntax, { range: range })
-            );
-        }
-    }]);
-
-    return CronTabs;
-}(_react2.default.Component);
-
-var CronSyntax = function (_React$Component3) {
-    _inherits(CronSyntax, _React$Component3);
-
-    function CronSyntax(props) {
-        _classCallCheck(this, CronSyntax);
-
-        return _possibleConstructorReturn(this, (CronSyntax.__proto__ || Object.getPrototypeOf(CronSyntax)).call(this, props));
-    }
-
-    _createClass(CronSyntax, [{
-        key: 'render',
-        value: function render() {
-            var range = '';
-            if (this.props.range) {
-                range = _react2.default.createElement(
-                    'li',
-                    { className: 'list-group-item' },
-                    this.props.range,
-                    ' - Acceptable Values'
-                );
-            }
-            return _react2.default.createElement(
-                'div',
-                { className: 'Syntax' },
-                _react2.default.createElement(
-                    'ul',
-                    { className: 'list-group' },
-                    _react2.default.createElement(
-                        'li',
-                        { className: 'list-group-item' },
-                        '* - The asterisk operator specifies all possible values for a field.'
-                    ),
-                    _react2.default.createElement(
-                        'li',
-                        { className: 'list-group-item' },
-                        ', - This comma operator specifies a list of values. Ex: 1,3,6'
-                    ),
-                    _react2.default.createElement(
-                        'li',
-                        { className: 'list-group-item' },
-                        '- - The dash operator specifies a range of values. Ex: "1-5"'
-                    ),
-                    range
-                )
-            );
-        }
-    }]);
-
-    return CronSyntax;
-}(_react2.default.Component);
-
-var CronBuilder = function (_React$Component4) {
-    _inherits(CronBuilder, _React$Component4);
+var CronBuilder = function (_React$Component2) {
+    _inherits(CronBuilder, _React$Component2);
 
     function CronBuilder(props) {
         _classCallCheck(this, CronBuilder);
 
-        var _this4 = _possibleConstructorReturn(this, (CronBuilder.__proto__ || Object.getPrototypeOf(CronBuilder)).call(this, props));
+        var _this2 = _possibleConstructorReturn(this, (CronBuilder.__proto__ || Object.getPrototypeOf(CronBuilder)).call(this, props));
 
-        _this4.handleCronChange = _this4.handleCronChange.bind(_this4);
-        _this4.state = { cron: '' };
-        return _this4;
+        _this2.handleCronFieldSelect = _this2.handleCronFieldSelect.bind(_this2);
+        _this2.handleCronFieldChange = _this2.handleCronFieldChange.bind(_this2);
+        _this2.state = {
+            caret: '',
+            cron: '',
+            valid: '',
+            second: '',
+            minute: '',
+            hour: '',
+            day: '',
+            month: '',
+            weekday: '',
+            year: '',
+            secondRange: '',
+            minuteRange: '',
+            hourRange: '',
+            dayRange: '',
+            monthRange: '',
+            weekdayRange: '',
+            yearRange: '',
+            secondRegex: '^(\\?|\\*|(?:[0-5]?\\d)(?:(?:-|\\/|\\,)(?:[0-5]?\\d))?(?:,(?:[0-5]?\\d)(?:(?:-|\\/|\\,)(?:[0-5]?\\d))?)*)$',
+            minuteRegex: '^(\\?|\\*|(?:[0-5]?\\d)(?:(?:-|\\/|\\,)(?:[0-5]?\\d))?(?:,(?:[0-5]?\\d)(?:(?:-|\\/|\\,)(?:[0-5]?\\d))?)*)$',
+            hourRegex: '^(\\?|\\*|(?:[01]?\\d|2[0-3])(?:(?:-|\\/|\\,)(?:[01]?\\d|2[0-3]))?(?:,(?:[01]?\\d|2[0-3])(?:(?:-|\\/|\\,)(?:[01]?\\d|2[0-3]))?)*)$',
+            dayRegex: '^(\\?|\\*|(?:0?[1-9]|[12]\\d|3[01])(?:(?:-|\\/|\\,)(?:0?[1-9]|[12]\\d|3[01]))?(?:,(?:0?[1-9]|[12]\\d|3[01])(?:(?:-|\\/|\\,)(?:0?[1-9]|[12]\\d|3[01]))?)*)$',
+            monthRegex: '^(\\?|\\*|(?:[1-9]|1[012])(?:(?:-|\\/|\\,)(?:[1-9]|1[012]))?(?:L|W)?(?:,(?:[1-9]|1[012])(?:(?:-|\\/|\\,)(?:[1-9]|1[012]))?(?:L|W)?)*|\\?|\\*|(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?(?:,(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?)*)$',
+            weekdayRegex: '^(\\?|\\*|(?:[0-6])(?:(?:-|\\/|\\,|#)(?:[0-6]))?(?:L)?(?:,(?:[0-6])(?:(?:-|\\/|\\,|#)(?:[0-6]))?(?:L)?)*|\\?|\\*|(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?(?:,(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?)*)$',
+            yearRegex: '^(\\?|\\*|(?:|\\d{4})(?:(?:-|\\/|\\,)(?:|\\d{4}))?(?:,(?:|\\d{4})(?:(?:-|\\/|\\,)(?:|\\d{4}))?)*)$'
+        };
+        return _this2;
     }
 
     _createClass(CronBuilder, [{
-        key: 'handleCronChange',
-        value: function handleCronChange(cron) {
-            this.setState({ cron: cron });
+        key: 'handleCronFieldSelect',
+        value: function handleCronFieldSelect(pos) {
+            this.setState({ caret: pos });
+        }
+    }, {
+        key: 'handleCronFieldChange',
+        value: function handleCronFieldChange(value) {
+            var result = value.replace(/^\s+/g, "").toUpperCase();
+            var split = result.split(' ');
+            console.log(split);
+            var split0 = split[0] && split[0].length;
+            var split1 = split[1] && split[0].length + split[1].length + 1;
+            var split2 = split[2] && split[0].length + split[1].length + split[2].length + 2;
+            var split3 = split[3] && split[0].length + split[1].length + split[2].length + split[3].length + 3;
+            var split4 = split[4] && split[0].length + split[1].length + split[2].length + split[3].length + split[4].length + 4;
+            switch (split.length) {
+                case 0:
+                    this.setState({
+                        cron: result,
+                        minute: split[0],
+                        hour: '',
+                        day: '',
+                        month: '',
+                        weekday: '',
+                        minuteRange: [0, split0],
+                        hourRange: '',
+                        dayRange: ''
+                    });break;
+                case 1:
+                    this.setState({
+                        cron: result,
+                        minute: split[0],
+                        hour: split[1],
+                        day: '',
+                        month: '',
+                        weekday: '',
+                        minuteRange: [0, split0],
+                        hourRange: [split0 + 1, split1],
+                        dayRange: [split1 + 1, split2],
+                        monthRange: [split2 + 1, split3],
+                        weekdayRange: [split3 + 1, split4]
+                    });break;
+                case 2:
+                    this.setState({
+                        cron: result,
+                        minute: split[0],
+                        hour: split[1],
+                        day: split[2],
+                        month: '',
+                        weekday: '',
+                        minuteRange: [0, split0],
+                        hourRange: [split0 + 1, split1],
+                        dayRange: [split1 + 1, split2],
+                        monthRange: [split2 + 1, split3],
+                        weekdayRange: [split3 + 1, split4]
+                    });break;
+                case 3:
+                    this.setState({ cron: result,
+                        minute: split[0],
+                        hour: split[1],
+                        day: split[2],
+                        month: split[3],
+                        weekday: '',
+                        minuteRange: [0, split0],
+                        hourRange: [split0 + 1, split1],
+                        dayRange: [split1 + 1, split2],
+                        monthRange: [split2 + 1, split3],
+                        weekdayRange: [split3 + 1, split4]
+                    });break;
+                case 4:
+                    this.setState({
+                        cron: result,
+                        minute: split[0],
+                        hour: split[1],
+                        day: split[2],
+                        month: split[3],
+                        weekday: split[4],
+                        minuteRange: [0, split0],
+                        hourRange: [split0 + 1, split1],
+                        dayRange: [split1 + 1, split2],
+                        monthRange: [split2 + 1, split3],
+                        weekdayRange: [split3 + 1, split4]
+                    });break;
+                case 5:
+                    this.setState({
+                        cron: result,
+                        minute: split[0],
+                        hour: split[1],
+                        day: split[2],
+                        month: split[3],
+                        weekday: split[4],
+                        minuteRange: [0, split0],
+                        hourRange: [split0 + 1, split1],
+                        dayRange: [split1 + 1, split2],
+                        monthRange: [split2 + 1, split3],
+                        weekdayRange: [split3 + 1, split4]
+                    });break;
+                default:
+                    break;
+            }
         }
     }, {
         key: 'render',
         value: function render() {
+            var minuteClass = 'invalid';
+            var hourClass = 'invalid';
+            var dayClass = 'invalid';
+            var monthClass = 'invalid';
+            var weekdayClass = 'invalid';
+            var minuteReg = new RegExp(this.state.minuteRegex);
+            var hourReg = new RegExp(this.state.hourRegex);
+            var dayReg = new RegExp(this.state.dayRegex);
+            var monthReg = new RegExp(this.state.monthRegex);
+            var weekdayReg = new RegExp(this.state.weekdayRegex);
+            if (minuteReg.test(this.state.minute)) {
+                minuteClass = 'valid';
+            } else {
+                minuteClass = 'invalid';
+            }
+            if (hourReg.test(this.state.hour)) {
+                hourClass = 'valid';
+            } else {
+                hourClass = 'invalid';
+            }
+            if (dayReg.test(this.state.day)) {
+                dayClass = 'valid';
+            } else {
+                dayClass = 'invalid';
+            }
+            if (monthReg.test(this.state.month)) {
+                monthClass = 'valid';
+            } else {
+                monthClass = 'invalid';
+            }
+            if (weekdayReg.test(this.state.weekday)) {
+                weekdayClass = 'valid';
+            } else {
+                weekdayClass = 'invalid';
+            }
+            if (this.state.minuteRange[0] <= this.state.caret && this.state.caret <= this.state.minuteRange[1]) {
+                minuteClass = 'active';
+            }
+            if (this.state.hourRange[0] <= this.state.caret && this.state.caret <= this.state.hourRange[1]) {
+                hourClass = 'active';
+            }
+            if (this.state.dayRange[0] <= this.state.caret && this.state.caret <= this.state.dayRange[1]) {
+                dayClass = 'active';
+            }
+            if (this.state.monthRange[0] <= this.state.caret && this.state.caret <= this.state.monthRange[1]) {
+                monthClass = 'active';
+            }
+            if (this.state.weekdayRange[0] <= this.state.caret && this.state.caret <= this.state.weekdayRange[1]) {
+                weekdayClass = 'active';
+            }
             return _react2.default.createElement(
                 'div',
                 null,
                 _react2.default.createElement(
                     'h2',
                     null,
-                    'The Current Cron Task Is: ',
+                    'The Current Cron Field Is: ',
                     this.state.cron
                 ),
                 _react2.default.createElement(
                     'h3',
                     null,
-                    prettyCron.toString(this.state.cron)
+                    'Caret Position: ',
+                    this.state.caret
                 ),
                 _react2.default.createElement(
                     'h3',
-                    null,
-                    'The next time this job will run is ',
-                    prettyCron.getNext(this.state.cron)
+                    { className: minuteClass },
+                    'minute: ',
+                    this.state.minute,
+                    ', length: ',
+                    this.state.minute && this.state.minute.length
                 ),
-                _react2.default.createElement(CronField, {
-                    label: 'Cron',
-                    placeholder: 'Cron String',
-                    value: this.state.cron,
-                    onChange: this.handleCronChange }),
-                _react2.default.createElement(CronTabs, null)
+                _react2.default.createElement(
+                    'h3',
+                    { className: hourClass },
+                    'hour: ',
+                    this.state.hour,
+                    ', length: ',
+                    this.state.hour && this.state.hour.length
+                ),
+                _react2.default.createElement(
+                    'h3',
+                    { className: dayClass },
+                    'day: ',
+                    this.state.day,
+                    ', length: ',
+                    this.state.day && this.state.day.length
+                ),
+                _react2.default.createElement(
+                    'h3',
+                    { className: monthClass },
+                    'month: ',
+                    this.state.month,
+                    ', length: ',
+                    this.state.month && this.state.month.length
+                ),
+                _react2.default.createElement(
+                    'h3',
+                    { className: weekdayClass },
+                    'weekday: ',
+                    this.state.weekday,
+                    ', length: ',
+                    this.state.weekday && this.state.weekday.length
+                ),
+                _react2.default.createElement(CronField, { value: this.state.cron, placeholder: 'Cron Job', onSelect: this.handleCronFieldSelect, onChange: this.handleCronFieldChange })
             );
         }
     }]);

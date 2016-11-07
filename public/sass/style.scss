@@ -18,3 +18,14 @@ body {
     background-color: #ddd;
     padding: 10px;
 }
+
+h3.valid {
+    color: green;
+}
+h3.invalid {
+    color: red;
+}
+
+h3.active {
+    color: blue;
+}
