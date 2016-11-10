@@ -1,17 +1,21 @@
 var prettyCron = require('prettycron');
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+// Included using Browserify
+// import React from 'react';
+// import ReactDOM from 'react-dom';
 
+// Text field component
 class CronField extends React.Component {
     constructor(props) {
         super(props);
         this.handleSelect = this.handleSelect.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
+    // Update caret position when field is selected.
     handleSelect(event) {
         this.props.onSelect(event.target.selectionStart);
     }
+    // Update cron values with field is changed.
     handleChange(event) {
         this.props.onChange(event.target.value);
     }
@@ -28,12 +32,47 @@ class CronField extends React.Component {
     }
 }
 
+// Synatax guide for Cron tabs.
+class CronSyntax extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        let range = '';
+        let alt = '';
+        // Set acceptable range values.
+        if(this.props.range) {
+            range = <li className="list-group-item">{this.props.range} - Acceptable Values</li>;
+        }
+        // Set alternative values if avalible.
+        if(this.props.alt) {
+            alt = <li className="list-group-item">{this.props.alt} - Alternative Values</li>;
+        }
+        return (
+            <div className="Syntax">
+                <ul className="list-group">
+                    <li className="list-group-item">* - The asterisk operator specifies all possible values for a field.</li>
+                    <li className="list-group-item">, - This comma operator specifies a list of values. Ex: 1,3,6</li>
+                    <li className="list-group-item">- - The dash operator specifies a range of values. Ex: "1-5"</li>
+                    <li className="list-group-item">/ - The slash operator specifies a range of step values. Ex: "0/2"</li>
+                    {range}
+                    {alt}
+                </ul>
+            </div>
+        );
+    }
+}
+
+// Tabs for Cron syntax guide. Updates based on Cron Field's currently selected value.
+// Clicked tabs move Cron Field's caret.
 class CronTabs extends React.Component {
     constructor(props) {
         super(props);
         this.updateTab = this.updateTab.bind(this);
     }
+    // Update tab when clicked.
     updateTab(event) {
+        // Special case if the user clicks on the status label.
         if(event.target.classList.contains('label')) {
             this.props.onClick(event.target.parentElement.parentElement.id);
         }
@@ -49,6 +88,7 @@ class CronTabs extends React.Component {
         let dayClass = '';
         let monthClass = '';
         let weekdayClass = '';
+        // Set range values and Bootstrap active tab stylings.
         if(this.props.activeTab === 'minute') { range = '0-60'; minuteClass = 'active';}
         else if(this.props.activeTab === 'hour') { range = '0-23'; hourClass = 'active';}
         else if(this.props.activeTab === 'day') { range = '1-31'; dayClass = 'active';}
@@ -69,33 +109,6 @@ class CronTabs extends React.Component {
     }
 }
 
-class CronSyntax extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        let range = '';
-        let alt = '';
-        if(this.props.range) {
-            range = <li className="list-group-item">{this.props.range} - Acceptable Values</li>;
-        }
-        if(this.props.alt) {
-            alt = <li className="list-group-item">{this.props.alt} - Alternative Values</li>;
-        }
-        return (
-            <div className="Syntax">
-                <ul className="list-group">
-                    <li className="list-group-item">* - The asterisk operator specifies all possible values for a field.</li>
-                    <li className="list-group-item">, - This comma operator specifies a list of values. Ex: 1,3,6</li>
-                    <li className="list-group-item">- - The dash operator specifies a range of values. Ex: "1-5"</li>
-                    <li className="list-group-item">/ - The slash operator specifies a range of step values. Ex: "0/2"</li>
-                    {range}
-                    {alt}
-                </ul>
-            </div>
-        );
-    }
-}
 
 class CronBuilder extends React.Component {
     constructor(props) {
@@ -103,6 +116,7 @@ class CronBuilder extends React.Component {
         this.handleCronFieldSelect = this.handleCronFieldSelect.bind(this);
         this.handleCronFieldChange = this.handleCronFieldChange.bind(this);
         this.handleTabChange = this.handleTabChange.bind(this);
+        // Populate with default values.
         this.state = {
             fieldId: 'cron-field',
             caret: 0,
@@ -127,9 +141,11 @@ class CronBuilder extends React.Component {
             yearRegex: '^(\\?|\\*|(?:|\\d{4})(?:(?:-|\\/|\\,)(?:|\\d{4}))?(?:,(?:|\\d{4})(?:(?:-|\\/|\\,)(?:|\\d{4}))?)*)$'
             }
     }
+    // Update caret position when the cron field is selected.
     handleCronFieldSelect(pos) {
         this.setState({caret: pos});
     }
+    // Update tab when the caret moves, or on user input.
     handleTabChange(value){
         document.getElementById(this.state.fieldId).focus();
         let start = eval('this.state.' + value + 'Range[0]');
@@ -141,14 +157,19 @@ class CronBuilder extends React.Component {
         document.getElementById(this.state.fieldId).setSelectionRange(start, stop);
         this.setState({activeTab: value, caret: eval('this.state.' + value + 'Range[0]')});
     }
+    // Validation jobs when cron field updates.
     handleCronFieldChange(value) {
+        // Remove leading whitespace.
         let result = value.replace(/^\s+/g, "").toUpperCase();
+        // Split cron field by whitespace.
         let split = result.split(' ');
+        // Length to start of each field.
         let split0 = (split[0] && (split[0].length));
         let split1 = (split[1] && (split[0].length+split[1].length)+1);
         let split2 = (split[2] && (split[0].length+split[1].length+split[2].length)+2);
         let split3 = (split[3] && (split[0].length+split[1].length+split[2].length+split[3].length)+3);
         let split4 = (split[4] && (split[0].length+split[1].length+split[2].length+split[3].length+split[4].length)+4);
+        // Switch statements to update state values.
         switch(split.length) {
             case 0: this.setState({
                 cron: result,
@@ -229,23 +250,28 @@ class CronBuilder extends React.Component {
         }
     }
     render() {
+        // Cron-To-English Variables
         let pretty = '';
         let prettyNext = '';
+        // Validation Classes for Cron Fields
         let minuteClass = '';
         let hourClass = '';
         let dayClass = '';
         let monthClass = '';
         let weekdayClass = '';
+        // Validate Cron with regex
         if(new RegExp(this.state.minuteRegex).test(this.state.minute)) {minuteClass='valid'} else if(this.state.minute == undefined || this.state.minute == '') {minuteClass='missing'} else {minuteClass='invalid'}
         if(new RegExp(this.state.hourRegex).test(this.state.hour)) {hourClass='valid'} else if(this.state.hour == undefined || this.state.hour == '') {hourClass='missing'} else {hourClass='invalid'}
         if(new RegExp(this.state.dayRegex).test(this.state.day)) {dayClass='valid'} else if(this.state.day == undefined || this.state.day == '') {dayClass='missing'} else {dayClass='invalid'}
         if(new RegExp(this.state.monthRegex).test(this.state.month)) {monthClass='valid'} else if(this.state.month == undefined || this.state.month == '') {monthClass='missing'} else {monthClass='invalid'}
         if(new RegExp(this.state.weekdayRegex).test(this.state.weekday)) {weekdayClass='valid'} else if(this.state.weekday == undefined || this.state.weekday == '') {weekdayClass='missing'} else {weekdayClass='invalid'}
+        // Set Active Tab from Caret
         if(this.state.minuteRange[0] <= this.state.caret && this.state.caret <= this.state.minuteRange[1]) {this.state.activeTab='minute';}
         if(this.state.hourRange[0] <= this.state.caret && this.state.caret <= this.state.hourRange[1]) {this.state.activeTab='hour';}
         if(this.state.dayRange[0] <= this.state.caret && this.state.caret <= this.state.dayRange[1]) {this.state.activeTab='day';}
         if(this.state.monthRange[0] <= this.state.caret && this.state.caret <= this.state.monthRange[1]) {this.state.activeTab='month';}
         if(this.state.weekdayRange[0] <= this.state.caret && this.state.caret <= this.state.weekdayRange[1]) {this.state.activeTab='weekday';}
+        // Only show PrettyCron if cron job is valid.
         if(minuteClass === 'valid' && hourClass  === 'valid' && dayClass  === 'valid' && monthClass  === 'valid' && weekdayClass === 'valid') {
             pretty = prettyCron.toString(this.state.cron);
             prettyNext = prettyCron.getNext(this.state.cron);
